@@ -39,7 +39,7 @@ def get_course(course_code):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return f"<h1>Page not found</h1> {error}"
+    return f"<h1>Page not found</h1> {error}", 404
 
 
 if __name__ == "__main__":
