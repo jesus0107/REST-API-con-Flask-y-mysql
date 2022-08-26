@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+from sqlite3 import Cursor
+from flask import Flask, jsonify, request
 from app_config import settings
 from flask_mysqldb import MySQL
 
@@ -35,7 +36,22 @@ def get_course(course_code):
             return jsonify({"message": "Course not found"})
     except Exception as ex:
         return f"Error: {ex}"
+   
+@app.route('/courses', methods=['POST'])
+def add_course():
     
+    try:
+        id = request.json['id']
+        name = request.json['name']
+        credits = request.json['credits']
+
+        cursor = conn.connection.cursor()
+        sql = "INSERT INTO api_flask.course(id, name, credits) VALUES ('{0}', '{1}', '{2}')".format(id, name, credits)
+        cursor.execute(sql)
+        conn.connection.commit()
+        return jsonify({"message": "Added course"})
+    except Exception as ex:
+        return f"Error: {ex}"
 
 @app.errorhandler(404)
 def page_not_found(error):
