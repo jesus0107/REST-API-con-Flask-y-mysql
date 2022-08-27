@@ -39,12 +39,10 @@ def get_course(course_code):
    
 @app.route('/courses', methods=['POST'])
 def add_course():
-    
     try:
         id = request.json['id']
         name = request.json['name']
         credits = request.json['credits']
-
         cursor = conn.connection.cursor()
         sql = "INSERT INTO api_flask.course(id, name, credits) VALUES ('{0}', '{1}', '{2}')".format(id, name, credits)
         cursor.execute(sql)
@@ -53,10 +51,39 @@ def add_course():
     except Exception as ex:
         return f"Error: {ex}"
 
+@app.route('/courses/<course_code>', methods=['DELETE'])
+def delete_course(course_code):
+    try:
+        cursor = conn.connection.cursor()
+        sql = "DELETE FROM api_flask.course WHERE id = {0}".format(course_code)
+        cursor.execute(sql)
+        conn.connection.commit()
+        return jsonify({"message": "Deleted course"})
+    except Exception as ex:
+        return f"Error: {ex}"
+
+
+    
 @app.errorhandler(404)
 def page_not_found(error):
     return f"<h1>Page not found</h1> {error}", 404
 
+# def validate_id(new_id):
+#     try:
+#         cursor = conn.connection.cursor()
+#         sql = "SELECT id FROM api_flask.course"
+#         cursor.execute(sql)
+#         data = cursor.fetchall()
+#         course_id = []
+#         for id in data:
+#             course_id.append(id)
+#         print(course_id)
+#         if new_id in course_id:
+#             return jsonify({"message": "Existing id"})
+#         else:
+#             return new_id
+#     except Exception as ex:
+#         return jsonify({"message": "Duplicate entry"})
 
 if __name__ == "__main__":
     app.config.from_object(settings['development'])
