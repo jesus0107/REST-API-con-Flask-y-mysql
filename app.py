@@ -1,4 +1,3 @@
-from sqlite3 import Cursor
 from flask import Flask, jsonify, request
 from app_config import settings
 from flask_mysqldb import MySQL
@@ -79,23 +78,6 @@ def update_course(course_code):
 @app.errorhandler(404)
 def page_not_found(error):
     return f"<h1>Page not found</h1> {error}", 404
-
-# def validate_id(new_id):
-#     try:
-#         cursor = conn.connection.cursor()
-#         sql = "SELECT id FROM api_flask.course"
-#         cursor.execute(sql)
-#         data = cursor.fetchall()
-#         course_id = []
-#         for id in data:
-#             course_id.append(id)
-#         print(course_id)
-#         if new_id in course_id:
-#             return jsonify({"message": "Existing id"})
-#         else:
-#             return new_id
-#     except Exception as ex:
-#         return jsonify({"message": "Duplicate entry"})
 
 if __name__ == "__main__":
     app.config.from_object(settings['development'])
