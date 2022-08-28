@@ -62,8 +62,20 @@ def delete_course(course_code):
     except Exception as ex:
         return f"Error: {ex}"
 
+@app.route('/courses/<course_code>', methods=['PUT'])
+def update_course(course_code):
+    try:
+        name = request.json['name']
+        credits = request.json['credits']
 
-    
+        cursor = conn.connection.cursor()
+        sql = "UPDATE api_flask.course SET name = '{0}', credits = '{1}' WHERE id = '{2}'".format(name, credits, course_code)
+        cursor.execute(sql)
+        conn.connection.commit()
+        return jsonify({"message": "Update course"})
+    except Exception as ex:
+        return f"Error: {ex}"
+
 @app.errorhandler(404)
 def page_not_found(error):
     return f"<h1>Page not found</h1> {error}", 404
